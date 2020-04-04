@@ -1,0 +1,409 @@
+ 
+ docker build -t servicio-oauth:v1 .
+ docker run -P --network springcloud servicio-oauth:v1
+
+ docker build -t servicio-eureka-server:v1 .
+ docker run -p 8761:8761 --name servicio-eureka-server --network springcloud servicio-eureka-server:v1
+docker run -p 8888:8888 --name config-server --network springcloud config-server:v1
+docker build -t servicio-usuarios:v1 .
+ docker run -P --network springcloud servicio-usuarios:v1
+ 
+ mvnw clean package -DskipTests
+ docker build -t servicio-zuul-server:v1 .
+ docker run -p 8090:8090 --network springcloud servicio-zuul-server:v1
+
+
+docker build -t servicio-productos:v1 .
+docker run -P --network springcloud servicio-productos:v1
+
+
+
+docker build -t servicio-items:v1 .
+docker run -P --network springcloud servicio-items:v1
+docker pull mysql:8
+docker run -p 3306:3306 --name microservicios-mysql8 --network springcloud -e MYSQL_ROOT_PASSWORD=0210 -e MYSQL_DATABASE=db_springboot_cloud -d mysql:8
+docker pull postgres:12-alpine
+docker run -p 5432:5432 --name microservicios-postgres12 --network springcloud -e POSTGRES_PASSWORD=0210 -e POSTGRES_DB=db_springboot_cloud -d postgres:12-alpine
+
+docker pull rabbitmq:3.8-management-alpine
+ docker run -p 15672:15672 -p 5672:5672 --name microservicios-rabbitmq38 --network springcloud -d rabbitmq:3.8-management-alpine
+docker build -t zipkin-server:v1 .
+docker run -p 9411:9411 --name zipkin-server --network springcloud -e RABBIT_ADDRESSES=microservicios-rabbitmq38:5672 -e STORAGE_TYPE=mysql -e MYSQL_USER=zipkin -e MYSQL_PASS=zipkin -e MYSQL_HOST=microservicios-mysql8 zipkin-server:v1
+
+
+docker inspect 86095e455c18
+docker ps -q
+docker logs -f 67cfe5731f20
+docker restart e4a7ac744412
+
+
+
+
+
+
+
+C:\Users\charles\Documents\Proyectos\Reposiorios\cursoSpringBoot\zipkin-server
+λ docker inspect 86095e455c18
+[
+    {
+        "Id": "86095e455c18e6175ad3976d40873d265444e0a2438c179033c6fea75b35f5b0",
+        "Created": "2020-03-15T15:37:14.854304483Z",
+        "Path": "java",
+        "Args": [
+            "-jar",
+            "/zipkin-server.jar"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 25414,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2020-03-15T15:37:18.711524444Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:4b2514ab085079451f6f27e294a1976855d9ca142adb24f098ab2906a7114f38",
+        "ResolvConfPath": "/mnt/sda1/var/lib/docker/containers/86095e455c18e6175ad3976d40873d265444e0a2438c179033c6fea75b35f5b0/resolv.conf",
+        "HostnamePath": "/mnt/sda1/var/lib/docker/containers/86095e455c18e6175ad3976d40873d265444e0a2438c179033c6fea75b35f5b0/hostname",
+        "HostsPath": "/mnt/sda1/var/lib/docker/containers/86095e455c18e6175ad3976d40873d265444e0a2438c179033c6fea75b35f5b0/hosts",
+        "LogPath": "/mnt/sda1/var/lib/docker/containers/86095e455c18e6175ad3976d40873d265444e0a2438c179033c6fea75b35f5b0/86095e455c18e6175ad3976d40873d265444e0a2438c179033c6fea75b35f5b0-json.log",
+        "Name": "/zipkin-server",
+        "RestartCount": 0,
+        "Driver": "aufs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "springcloud",
+            "PortBindings": {
+                "9411/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "9411"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "shareable",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                27,
+                212
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": false,
+            "PidsLimit": 0,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/asound",
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": null,
+            "Name": "aufs"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "b00e91da3f5e9318a007a020b7b60b1c13586da19dad994571bf7680774fcb75",
+                "Source": "/mnt/sda1/var/lib/docker/volumes/b00e91da3f5e9318a007a020b7b60b1c13586da19dad994571bf7680774fcb75/_data",
+                "Destination": "/tmp",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "86095e455c18",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "9411/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "RABBIT_ADDRESSES=microservicios-rabbitmq38:5672",
+                "STORAGE_TYPE=mysql",
+                "MYSQL_USER=zipkin",
+                "MYSQL_PASS=zipkin",
+                "MYSQL_HOST=microservicios-mysql8",
+                "PATH=/usr/java/openjdk-12/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=en_US.UTF-8",
+                "JAVA_HOME=/usr/java/openjdk-12",
+                "JAVA_VERSION=12.0.2",
+                "JAVA_URL=https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz",
+                "JAVA_SHA256=75998a6ebf477467aa5fb68227a67733f0e77e01f737d4dfbc01e617e59106ed"
+            ],
+            "Cmd": null,
+            "ArgsEscaped": true,
+            "Image": "zipkin-server:v1",
+            "Volumes": {
+                "/tmp": {}
+            },
+            "WorkingDir": "",
+            "Entrypoint": [
+                "java",
+                "-jar",
+                "/zipkin-server.jar"
+            ],
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "d35308280197e7e7e1d1030963e9efb08f91ff270a8616e1e212fcce087308ea",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {
+                "9411/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "9411"
+                    }
+                ]
+            },
+            "SandboxKey": "/var/run/docker/netns/d35308280197",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "springcloud": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "86095e455c18"
+                    ],
+                    "NetworkID": "56a7902dd99f9ba10119289497c7bc85b8b03da8b5ed68b37c65323e80a3f855",
+                    "EndpointID": "b8a86ae799bb22096812936c8a82bc79f1fca1067384956847193055ea796995",
+                    "Gateway": "172.20.0.1",
+                    "IPAddress": "172.20.0.12",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:14:00:0c",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+======================== config-server
+
+.\mvnw clean package
+ 
+docker build -t config-server:v1 .
+docker network create spring-microservicios
+docker run -p 8888:8888 --name config-server --network springcloud config-server:v1
+
+
+======================== servicio-eureka-server
+
+.\mvnw clean package
+ 
+docker build -t servicio-eureka-server:v1 .
+docker run -p 8761:8761 --name servicio-eureka-server --network springcloud servicio-eureka-server:v1
+======================== mysql
+
+docker pull mysql:8
+docker run -p 3306:3306 --name microservicios-mysql8 --network springcloud -e MYSQL_ROOT_PASSWORD=sasa -e MYSQL_DATABASE=db_springboot_cloud -d mysql:8
+docker logs -f microservicios-mysql8
+
+
+======================== postgresql
+
+docker pull postgres:12-alpine
+docker run -p 5432:5432 --name microservicios-postgres12 --network springcloud -e POSTGRES_PASSWORD=sasa -e POSTGRES_DB=db_springboot_cloud -d postgres:12-alpine
+docker logs -f microservicios-postgres12
+
+
+======================== springboot-servicio-productos
+
+.\mvnw clean package -DskipTests
+ 
+docker build -t servicio-productos:v1 .
+docker run -P --network springcloud servicio-productos:v1
+
+
+======================== springboot-servicio-zuul-server
+
+.\mvnw clean package -DskipTests
+ 
+docker build -t servicio-zuul-server:v1 .
+docker run -p 8090:8090 --network springcloud servicio-zuul-server:v1
+
+
+======================== springboot-servicio-usuarios
+
+.\mvnw clean package -DskipTests
+ 
+docker build -t servicio-usuarios:v1 .
+docker run -P --network springcloud servicio-usuarios:v1
+
+
+======================== springboot-servicio-oauth
+
+.\mvnw clean package -DskipTests
+ 
+docker build -t servicio-oauth:v1 .
+docker run -p 9100:9100 --network springcloud servicio-oauth:v1
+
+
+======================== springboot-servicio-item
+
+.\mvnw clean package -DskipTests
+ 
+docker build -t servicio-items:v1 .
+docker run -p 8002:8002 -p 8005:8005 -p 8007:8007 --network springcloud servicio-items:v1
+
+
+======================== rabbitmq
+
+docker pull rabbitmq:3.8-management-alpine
+docker run -p 15672:15672 -p 5672:5672 --name microservicios-rabbitmq38 --network springcloud -d rabbitmq:3.8-management-alpine
+ 
+docker logs -f microservicios-rabbitmq38
+
+
+======================== zipkin
+
+docker build -t zipkin-server:v1 .
+docker run -p 9411:9411 --name zipkin-server --network springcloud -e RABBIT_ADDRESSES=microservicios-rabbitmq38:5672 -e STORAGE_TYPE=mysql -e MYSQL_USER=zipkin -e MYSQL_PASS=zipkin -e MYSQL_HOST=microservicios-mysql8 zipkin-server:v1
+docker logs -f zipkin-server
+
+
+======================== Otros comandos
+
+detener y eliminar todos los contenedores:
+
+docker stop $(docker ps -q)
+docker rm $(docker ps -a -q)
+
+
+eliminar todas las imagenes:
+
+docker rmi $(docker images -a -q)
+
+
+
+
+
+//levantamos los servicios
+docker-compose up 
+//elimina contenedores y la red
+docker-compose down -v 
+//levantamos los servicios en silenciao para levantar uno or uno
+docker-compose up -d servicio-eureka-server

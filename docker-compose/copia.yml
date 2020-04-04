@@ -1,0 +1,307 @@
+//version que si va en mi pc
+version: '3.3'
+services:
+  config-server:
+    image: config-server:v1
+    ports:
+      - "8888:8888"
+    restart: always
+    networks:
+      - springcloud
+  servicio-eureka-server:
+    image: servicio-eureka-server:v1
+    ports:
+      - "8761:8761"
+    restart: always
+    networks:
+      - springcloud
+networks:
+  springcloud:
+
+
+
+
+
+version: '3.7'
+services:
+  config-server:
+    image: config-server:v1
+    ports:
+      - "8888:8888"
+    restar: always
+    networks:
+      - springcloud
+  servicio-eureka-server:
+    image: servicio-eureka-server:v1
+    ports:
+      - "8761:8761"
+    restar: always
+    networks:
+      - springcloud
+  microservicios-mysql8:
+    image: mysql:v1
+    ports:
+      - "3306:3306"
+    restar: always
+    networks:
+      - springcloud
+    enviroment:
+      MYSQL_DATABASE: db_springboot_cloud
+      MYSQL_ROOT_PASSWORD: 0210
+  servicio-productos:
+    image: servicio-productos:v1
+    ports:
+      - "3306:3306"
+    restar: always
+    networks:
+      - springcloud
+    depends_on:
+      - config-server
+      - servicio-eureka-server
+      - microservicios-mysql8
+  servicio-items:
+    image: servicio-items:v1
+    ports:
+      - "8002:8002"
+      - "8005:8005"
+      - "8007:8007"
+    restar: always
+    networks:
+      - springcloud
+    depends_on:
+      - config-server
+      - servicio-eureka-server
+      - servicio-productos
+  servicio-zuul-server:
+    image: servicio-zuul-server:v1
+    ports:
+      - "8090:8090"
+    restar: always
+    networks:
+      - springcloud
+    depends_on:
+      - config-server
+      - servicio-eureka-server
+      - servicio-productos    
+      - servicio-items
+networks:
+  springcloud:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+version: '3.7'
+services:
+  config-server:
+    image: config-server:v1
+    ports:
+      - "8888:8888"
+    restart: always
+    networks:
+      - springcloud
+  servicio-eureka-server:
+    image: servicio-eureka-server:v1
+    ports:
+      - "8761:8761"
+    restart: always
+    networks:
+      - springcloud
+  microservicios-mysql8:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    restart: always
+    networks:
+      - springcloud
+    environment: 
+      MYSQL_DATABASE: db_springboot_cloud
+      MYSQL_ROOT_PASSWORD: sasa
+  microservicios-postgres12:
+    image: postgres:12-alpine
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - springcloud
+    environment: 
+      POSTGRES_DB: db_springboot_cloud
+      POSTGRES_PASSWORD: sasa
+  servicio-productos:
+    image: servicio-productos:v1
+    restart: always
+    networks:
+      - springcloud
+    depends_on: 
+      - config-server
+      - servicio-eureka-server
+      - microservicios-mysql8
+  servicio-items:
+    image: servicio-items:v1
+    ports:
+      - "8002:8002"
+      - "8005:8005"
+      - "8007:8007"
+    restart: always
+    networks:
+      - springcloud
+    depends_on: 
+      - config-server
+      - servicio-eureka-server
+      - servicio-productos
+   servicio-usuarios:
+    image: servicio-usuarios:v1
+    restart: always
+    networks:
+      - springcloud
+    depends_on: 
+      - config-server
+      - servicio-eureka-server
+      - microservicios-postgres12
+   servicio-oauth:
+    image: servicio-oauth:v1
+    ports:
+      - "9100:9100"
+    restart: always
+    networks:
+      - springcloud
+    depends_on: 
+      - config-server
+      - servicio-eureka-server
+      - servicio-usuarios
+  servicio-zuul-server:
+    image: servicio-zuul-server:v1
+    ports:
+      - "8090:8090"
+    restart: always
+    networks:
+      - springcloud
+    depends_on: 
+      - config-server
+      - servicio-eureka-server
+      - servicio-productos
+      - servicio-items
+      - servicio-usuarios
+      - servicio-oauth
+  microservicios-rabbitmq38:
+    image: rabbitmq:3.8-management-alpine
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    restart: always
+    networks:
+      - springcloud
+  zipkin-server:
+    image: zipkin-server:v1
+    ports:
+      - "9411:9411"
+    restart: always
+    networks:
+      - springcloud
+    depends_on: 
+      - microservicios-rabbitmq38
+      - microservicios-mysql8
+    environment: 
+      RABBIT_ADDRESSES: microservicios-rabbitmq38:5672
+      STORAGE_TYPE: mysql
+      MYSQL_USER: zipkin
+      MYSQL_PASS: zipkin
+      MYSQL_HOST: microservicios-mysql8
+networks:
+  springcloud
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+version: '3.7'
+
+networks:
+  lab-services:
+    driver: bridge
+    name: lab-services-${CI_COMMIT_REF_SLUG}
+
+volumes:
+  lab-services:
+    name: lab-services-${CI_COMMIT_REF_SLUG}
+  lab-services-db:
+    name: lab-services-db-${CI_COMMIT_REF_SLUG}
+
+services:
+  lab-services-frontend:
+    container_name: lab-services-frontend-${CI_COMMIT_REF_SLUG}
+    image: ${LAB_SERVICES_FRONTEND_IMAGE}
+    restart: always
+    ports:
+      - "${LAB_SERVICES_FRONTEND_HTTP_PORT}:80"
+      - "${LAB_SERVICES_FRONTEND_HTTPS_PORT}:443"
+    networks:
+      - lab-services
+    depends_on:
+      - lab-services-backend
+
+  lab-services-backend:
+    container_name: lab-services-backend-${CI_COMMIT_REF_SLUG}
+    #build: ./docker
+    image: ${LAB_SERVICES_BACKEND_IMAGE}
+    restart: always
+    ports:
+      - "${LAB_SERVICES_BACKEND_PORT}:8002"
+      - "${LAB_SERVICES_BACKEND_DEBUG_PORT}:5005"
+    networks:
+      - lab-services
+    volumes:
+      - lab-services:/tmp
+    depends_on:
+      - lab-services-db
+    environment: 
+      - SPRING_PROFILES_ACTIVE=local
+
+  lab-services-db:
+    container_name: lab-services-db-${CI_COMMIT_REF_SLUG}
+    networks:
+      - lab-services
+    restart: always
+    image: postgres:10-alpine
+    ports:
+      - "${LAB_SERVICES_POSTGRES_PORT}:5432"
+    environment:
+      - TZ
+      - LC_TIME
+      - POSTGRES_USER=${LAB_SERVICES_USERNAME}
+      - POSTGRES_PASSWORD=${LAB_SERVICES_PASSWORD}
+    volumes:
+     - lab-services-db:/var/lib/postgresql/data
